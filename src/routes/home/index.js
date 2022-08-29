@@ -70,10 +70,10 @@ export default function Home(props) {
     const [long, setLong] = React.useState([]);
     const [anchorEl, setAnchorEl] = React.useState(null);
     const {
+        isLoading,
         isAuthenticated,
-        logout, user
+        logout, user, loginWithRedirect
     } = useAuth0();
-
     const handleMenu = (event) => {
         setAnchorEl(event.currentTarget);
     };
@@ -89,7 +89,7 @@ export default function Home(props) {
         const controller = new AbortController();
         const signal = controller.signal;
         previousController.current = controller;
-        fetch(`https://api.openweathermap.org/geo/1.0/direct?q=${searchTerm}&limit=5&appid=8427ae3bc5be144dfc58174c5400ded1`, {
+        fetch(`https://api.openweathermap.org/geo/1.0/direct?q=${searchTerm}&limit=5&appid=${process.env.APP_ID}`, {
             cors: false
         })
             .then(function (response) {
@@ -112,6 +112,12 @@ export default function Home(props) {
             ]);
         }
     };
+
+    useEffect(() => {
+        if (!isLoading && !isAuthenticated) {
+            navigate('/');
+        }
+    }, [isLoading, isAuthenticated]);
 
     return (
         <React.Fragment>
