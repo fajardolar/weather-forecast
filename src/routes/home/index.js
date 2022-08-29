@@ -68,17 +68,11 @@ export default function Home(props) {
     const [city, setCity] = React.useState([]);
     const [lat, setLat] = React.useState([]);
     const [long, setLong] = React.useState([]);
-    const [userProfile, setUserProfile] = React.useState({});
     const [anchorEl, setAnchorEl] = React.useState(null);
     const {
         isAuthenticated,
         logout, user
     } = useAuth0();
-
-    useEffect(() => {
-        let session = localStorage.getItem("userProfile");
-        setUserProfile(JSON.parse(session));
-    }, [])
 
     const handleMenu = (event) => {
         setAnchorEl(event.currentTarget);
@@ -95,7 +89,7 @@ export default function Home(props) {
         const controller = new AbortController();
         const signal = controller.signal;
         previousController.current = controller;
-        fetch(`https://api.openweathermap.org/geo/1.0/direct?q=${searchTerm}&limit=5&appid=447de07f839b7e9041672cd99146d7e4`, {
+        fetch(`https://api.openweathermap.org/geo/1.0/direct?q=${searchTerm}&limit=5&appid=8427ae3bc5be144dfc58174c5400ded1`, {
             cors: false
         })
             .then(function (response) {
