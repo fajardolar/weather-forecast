@@ -20,4 +20,3 @@ CLIENT_ID=<YOUR_CLIENT_ID>
 ```
 npm start
 ```
-be sure if you connected with a device on debugging mode or use the emulator on debugging mode too.
