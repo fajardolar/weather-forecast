@@ -20,3 +20,4 @@ CLIENT_ID=<YOUR_CLIENT_ID>
 ```
 npm start
 ```
+The Application Runs on localhost:3000
