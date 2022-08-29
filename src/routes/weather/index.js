@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import IconButton from '@mui/material/IconButton';
 import Typography from '@mui/material/Typography';
 import Cloud from '@mui/icons-material/Cloud';
@@ -18,7 +18,8 @@ import TableContainer from '@mui/material/TableContainer';
 import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
-
+import CircularProgress from '@mui/material/CircularProgress';
+import { useSearchParams } from 'react-router-dom';
 
 function ElevationScroll(props) {
     const { children, window } = props;
@@ -55,45 +56,50 @@ ElevationScroll.propTypes = {
     window: PropTypes.func,
 };
 
-function createData(name, calories, fat, carbs, protein) {
-    return { name, calories, fat, carbs, protein };
-}
-
-const rows = [
-    createData('Frozen yoghurt', 159, 6.0, 24, 4.0),
-    createData('Ice cream sandwich', 237, 9.0, 37, 4.3),
-    createData('Eclair', 262, 16.0, 24, 6.0),
-    createData('Cupcake', 305, 3.7, 67, 4.3),
-    createData('Gingerbread', 356, 16.0, 49, 3.9),
-];
+const style = {
+    box: {
+        my: 8,
+        mx: 4,
+        display: 'flex',
+        flexDirection: 'column',
+        alignItems: 'center',
+    },
+    table: { minWidth: 650 },
+    back: {
+        display: 'flex',
+        flexDirection: 'column',
+        alignItems: 'end',
+    },
+    margin: { mt: 3, mb: 2, },
+    weather: { flex: 1 }
+};
 
 export default function Home(props) {
     const navigate = useNavigate();
-    const [anchorEl, setAnchorEl] = React.useState(null);
-    const [expanded, setExpanded] = React.useState(false);
-    const [value, setValue] = React.useState(0);
-    const ref = React.useRef(null);
-    const [userProfile, setUserProfile] = React.useState({});
+    const [data, setData] = useState([]);
+    const cells = ["Date (mm/dd/yyyy)", "Temp(°F)", "Description", "Main", "Pressure", "Humidity"];
+    const [searchParams] = useSearchParams();
 
     useEffect(() => {
-        let session = localStorage.getItem("userProfile");
-        setUserProfile(JSON.parse(session));
-    }, [])
+        const url = `https://api.openweathermap.org/data/2.5/forecast/daily?lat=${searchParams.get('lat')}&lon=${searchParams.get('long')}&cnt=16&appid=<app_id>&units=imperial`;
 
-    const handleMenu = (event) => {
-        setAnchorEl(event.currentTarget);
-    };
+        const fetchData = async () => {
+            try {
+                const response = await fetch(url);
+                const json = await response.json();
+                setData(json.list);
+            } catch (error) {
+                console.log("error", error);
+            }
+        };
 
-    const handleClose = () => {
-        setAnchorEl(null);
-    };
+        fetchData();
+    }, [data]);
 
     return (
         <React.Fragment>
             <CssBaseline />
-
             <ElevationScroll {...props}>
-
                 <AppBar style={{ background: '#87CEEB' }} >
                     <Toolbar>
                         <IconButton
@@ -101,12 +107,11 @@ export default function Home(props) {
                             aria-label="account of current user"
                             aria-controls="menu-appbar"
                             aria-haspopup="true"
-                            onClick={handleMenu}
                             color="inherit"
                         >
                             <Cloud />
                         </IconButton>
-                        <Typography variant="h6" component="div" sx={{ flex: 1 }}>
+                        <Typography variant="h6" component="div" sx={style.weather}>
                             Weather Forecast
                         </Typography>
                         <div>
@@ -120,70 +125,56 @@ export default function Home(props) {
 
                     </Toolbar>
                 </AppBar>
-
             </ElevationScroll>
             <Toolbar />
-            <Box
-                sx={{
-                    my: 8,
-                    mx: 4,
-                    display: 'flex',
-                    flexDirection: 'column',
-                    alignItems: 'center',
-                }}
-            >
+            <Box sx={style.box} >
                 <TableContainer component={Paper}>
-                    <Table sx={{ minWidth: 650 }} aria-label="simple table">
+                    <Table sx={style.table} aria-label="simple table">
                         <TableHead>
                             <TableRow>
-                                <TableCell colSpan={6}>Date</TableCell>
-                            </TableRow>
-                        </TableHead>
-                        <TableHead>
-                            <TableRow>
-                                <TableCell>(mm/dd/yyyy)</TableCell>
-                                <TableCell align="right">Temp(F)</TableCell>
-                                <TableCell align="right">Description</TableCell>
-                                <TableCell align="right">Main</TableCell>
-                                <TableCell align="right">Pressure</TableCell>
-                                <TableCell align="right">Humidity</TableCell>
+
+                                {
+                                    cells.length > 0 && cells.map((dt, i) =>
+                                    (<TableCell key={i} align="center">
+                                        <strong>{dt}</strong>
+                                    </TableCell>)
+                                    )
+                                }
+
                             </TableRow>
                         </TableHead>
                         <TableBody>
-                            {rows.map((row) => (
-                                <TableRow
-                                    key={row.name}
-                                    sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
-                                >
-                                    <TableCell component="th" scope="row">
-                                        {row.name}
-                                    </TableCell>
-                                    <TableCell align="right">{row.calories}</TableCell>
-                                    <TableCell align="right">{row.fat}</TableCell>
-                                    <TableCell align="right">{row.carbs}</TableCell>
-                                    <TableCell align="right">{row.protein}</TableCell>
-                                    <TableCell align="right">{row.protein}</TableCell>
-                                </TableRow>
-                            ))}
+                            {data.length == 0 ? <TableCell align="center" colSpan={6}><CircularProgress /></TableCell>
+                                : data.map((row, i) => (
+                                    <TableRow
+                                        key={i}
+                                        sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
+                                    >
+                                        <TableCell component="th" scope="row" align="center">
+                                            {new Date(1546108200 * 1000).toLocaleDateString("en-US")}
+                                        </TableCell>
+                                        <TableCell align="center">{row.temp.day}</TableCell>
+                                        <TableCell align="center">{row.weather[0].description}</TableCell>
+                                        <TableCell align="center">{row.weather[0].main}</TableCell>
+                                        <TableCell align="center">{row.pressure}</TableCell>
+                                        <TableCell align="center">{row.humidity}</TableCell>
+                                    </TableRow>
+                                ))}
                         </TableBody>
                     </Table>
                 </TableContainer>
-                <Grid container sx={{
-                    display: 'flex',
-                    flexDirection: 'column',
-                    alignItems: 'end',
-                }}>
+
+                <Grid container sx={style.back}>
                     <Button
                         type="submit"
                         variant="contained"
-                        sx={{ mt: 3, mb: 2, }}
+                        sx={style.margin}
                         onClick={() => navigate('/home')}
                     >
                         Back
                     </Button>
                 </Grid>
             </Box>
-
         </React.Fragment >
     );
 }

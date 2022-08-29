@@ -10,8 +10,8 @@ import { Auth0Provider } from '@auth0/auth0-react';
 render(
 
   <Auth0Provider
-    domain="<domain>"
-    clientId="<client-id>"
+    domain="<domain-name>"
+    clientId="<client_id>"
     redirectUri={window.location.origin + "/home"}
   >
     <App />
@@ -25,4 +25,4 @@ render(
 // to log results (for example: reportWebVitals(console.log))
 // or send to an analytics endpoint. Learn more: https://bit.ly/CRA-vitals
 reportWebVitals();
-registerServiceWorker();
+// registerServiceWorker();

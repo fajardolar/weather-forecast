@@ -49,16 +49,22 @@ ElevationScroll.propTypes = {
     window: PropTypes.func,
 };
 
+const style = {
+    box: {
+        my: 8,
+        mx: 4,
+        display: 'flex',
+        flexDirection: 'column',
+        alignItems: 'center',
+    },
+    margin: { mt: 3, mb: 2 }
+}
+const postUrl = process.env.APP_ID
 export default function Home(props) {
-    const navigate = useNavigate();
-    const [anchorEl, setAnchorEl] = React.useState(null);
-    const [expanded, setExpanded] = React.useState(false);
-    const [value, setValue] = React.useState(0);
-    const ref = React.useRef(null);
     const [userProfile, setUserProfile] = React.useState({});
+    const [anchorEl, setAnchorEl] = React.useState(null);
     const {
-        isAuthenticated,
-        loginWithRedirect, logout, user
+        loginWithRedirect
     } = useAuth0();
 
 
@@ -69,10 +75,6 @@ export default function Home(props) {
 
     const handleMenu = (event) => {
         setAnchorEl(event.currentTarget);
-    };
-
-    const handleClose = () => {
-        setAnchorEl(null);
     };
 
     return (
@@ -96,38 +98,26 @@ export default function Home(props) {
                         <Typography variant="h6" component="div" sx={{ flex: 1 }}>
                             Weather Forecast
                         </Typography>
-
                     </Toolbar>
                 </AppBar>
 
             </ElevationScroll>
             <Toolbar />
-            <Box
-                sx={{
-                    my: 8,
-                    mx: 4,
-                    display: 'flex',
-                    flexDirection: 'column',
-                    alignItems: 'center',
-                }}
-            >
+            <Box sx={style.box} >
                 <Typography variant="h6" component="div" sx={{ flex: 1 }} >
                     Welcome to the weather forecast web application. Please login with your <br />
-                    Github user to use the application and view the weather in your city.
+                    Github user to use the application and view the weather in your city. {postUrl}
                     <Grid container>
-
                         <Button
                             type="submit"
                             variant="contained"
-                            sx={{ mt: 3, mb: 2 }}
+                            sx={style.margin}
                             onClick={loginWithRedirect}
                         >
                             Login
                         </Button>
-
                     </Grid>
                 </Typography>
-
             </Box>
 
         </React.Fragment >
