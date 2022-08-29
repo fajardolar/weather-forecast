@@ -10,8 +10,8 @@ import { Auth0Provider } from '@auth0/auth0-react';
 render(
 
   <Auth0Provider
-    domain="<domain-name>"
-    clientId="<client_id>"
+    domain="dev-laraine.us.auth0.com"
+    clientId="ZNv0AZoPVfNsB0tQNihJa2pogfsmnoOm"
     redirectUri={window.location.origin + "/home"}
   >
     <App />

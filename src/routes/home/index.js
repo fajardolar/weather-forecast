@@ -95,7 +95,7 @@ export default function Home(props) {
         const controller = new AbortController();
         const signal = controller.signal;
         previousController.current = controller;
-        fetch(`https://api.openweathermap.org/geo/1.0/direct?q=${searchTerm}&limit=5&appid=<app_id>`, {
+        fetch(`https://api.openweathermap.org/geo/1.0/direct?q=${searchTerm}&limit=5&appid=447de07f839b7e9041672cd99146d7e4`, {
             cors: false
         })
             .then(function (response) {

@@ -59,7 +59,7 @@ const style = {
     },
     margin: { mt: 3, mb: 2 }
 }
-const postUrl = process.env.APP_ID
+
 export default function Home(props) {
     const [userProfile, setUserProfile] = React.useState({});
     const [anchorEl, setAnchorEl] = React.useState(null);
@@ -67,11 +67,6 @@ export default function Home(props) {
         loginWithRedirect
     } = useAuth0();
 
-
-    useEffect(() => {
-        let session = localStorage.getItem("userProfile");
-        setUserProfile(JSON.parse(session));
-    }, [])
 
     const handleMenu = (event) => {
         setAnchorEl(event.currentTarget);
@@ -106,7 +101,7 @@ export default function Home(props) {
             <Box sx={style.box} >
                 <Typography variant="h6" component="div" sx={{ flex: 1 }} >
                     Welcome to the weather forecast web application. Please login with your <br />
-                    Github user to use the application and view the weather in your city. {postUrl}
+                    Github user to use the application and view the weather in your city.
                     <Grid container>
                         <Button
                             type="submit"
