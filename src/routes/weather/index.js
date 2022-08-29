@@ -94,6 +94,12 @@ export default function Home(props) {
             console.log("error", error);
         }
     };
+
+    const getDescription = (dt) => {
+        const str = dt.charAt(0).toUpperCase() + dt.slice(1);
+        return str;
+    }
+
     return (
         <React.Fragment>
             <CssBaseline />
@@ -154,7 +160,7 @@ export default function Home(props) {
                                             {new Date(1546108200 * 1000).toLocaleDateString("en-US")}
                                         </TableCell>
                                         <TableCell align="center">{row.temp.day}</TableCell>
-                                        <TableCell align="center">{row.weather[0].description}</TableCell>
+                                        <TableCell align="center">{getDescription(row.weather[0].description)}</TableCell>
                                         <TableCell align="center">{row.weather[0].main}</TableCell>
                                         <TableCell align="center">{row.pressure}</TableCell>
                                         <TableCell align="center">{row.humidity}</TableCell>
